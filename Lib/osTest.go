@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -22,6 +23,8 @@ func osTest() {
 	if len(os.Args) > 1 {
 		tryArgs()
 	}
+	tryChdir()
+	tryChtimes()
 }
 
 // Use CreateTemp
@@ -85,4 +88,44 @@ func tryArgs() {
 		sep = "+"
 	}
 	fmt.Println(s)
+}
+
+func tryChdir() {
+	fmt.Println(strings.Repeat("-", 8) + "tryChdir" + strings.Repeat("-", 8))
+	err := os.Chdir("/BlockChain/Algorithm")
+	if err != nil {
+		log.Fatal(err)
+	}
+	f, _ := os.Open(".")
+	files, _ := f.ReadDir(-1)
+	fmt.Println(files)
+}
+
+func timespecToTime(ts syscall.Timespec) time.Time {
+	return time.Unix(int64(ts.Sec), int64(ts.Nsec))
+}
+
+func tryChtimes() {
+	fileInfo, err := os.Stat("./run.sh")
+	stat_t := fileInfo.Sys().(*syscall.Stat_t)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("最后修改时间：", timespecToTime(stat_t.Mtim))
+	fmt.Println("最后访问时间：", timespecToTime(stat_t.Atim))
+	// 改变文件时间戳为两天前
+	twoDaysFromNow := time.Now().Add(48 * time.Hour)
+	lastAccessTime := twoDaysFromNow
+	lastModifyTime := twoDaysFromNow
+	err = os.Chtimes("./run.sh", lastAccessTime, lastModifyTime)
+	if err != nil {
+		panic(err)
+	}
+	fileInfo, err = os.Stat("./run.sh")
+	stat_t = fileInfo.Sys().(*syscall.Stat_t)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("最后修改时间：", timespecToTime(stat_t.Mtim))
+	fmt.Println("最后访问时间：", timespecToTime(stat_t.Atim))
 }

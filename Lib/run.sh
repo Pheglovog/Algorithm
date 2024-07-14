@@ -1,2 +1,2 @@
 go build ./...
-./Lib regex
+./Lib fs
