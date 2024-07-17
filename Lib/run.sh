@@ -1,2 +1,2 @@
 go build ./...
-./Lib fs
+./Lib os
