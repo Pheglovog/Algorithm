@@ -1,2 +1,3 @@
 go build ./...
-./Lib os
+./Lib time
+rm Lib

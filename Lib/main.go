@@ -15,6 +15,8 @@ func main() {
 		fsTest()
 	case "io":
 		ioTest()
+	case "time":
+		timeTest()
 	default:
 		fmt.Println("not a right command")
 	}
