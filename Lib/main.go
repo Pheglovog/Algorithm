@@ -17,6 +17,8 @@ func main() {
 		ioTest()
 	case "time":
 		timeTest()
+	case "json":
+		jsonTest()
 	default:
 		fmt.Println("not a right command")
 	}

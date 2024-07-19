@@ -1,3 +1,3 @@
 go build ./...
-./Lib time
+./Lib json
 rm Lib
